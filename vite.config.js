@@ -8,13 +8,17 @@ export default defineConfig(({ command }) => {
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
-    root: 'src',
+
+    // Якщо всі HTML-файли лежать у корені репо, root прибираємо
+    // root: 'src', 
+
     build: {
       sourcemap: true,
       rollupOptions: {
+        // Вказуємо HTML-файли у корені проєкту
         input: {
           main: './index.html',
-          favorites: './favorites.html',
+          favorites: './favorites.html', // якщо потрібен
         },
         output: {
           manualChunks(id) {
@@ -36,15 +40,19 @@ export default defineConfig(({ command }) => {
           },
         },
       },
-      outDir: '../dist',
+      outDir: 'dist',       // папка для збірки
       emptyOutDir: true,
     },
+
     plugins: [
       injectHTML(),
-      FullReload(['./src/**/**.html']),
+      FullReload(['./**/*.html']), // слідкує за HTML у корені і підпапках
       SortCss({
         sort: 'mobile-first',
       }),
     ],
+
+    // Для GitHub Pages
+    base: '/kyrcova3.github.io/',
   };
 });
